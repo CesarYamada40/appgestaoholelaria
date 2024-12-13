@@ -1,0 +1,26 @@
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+.env
+*.log
+
+# macOS
+.DS_Store
+
+# Local logs
+logs/
+
+# SQLite database files
+*.db
+*.db-journal
+
+# Expo
+.expo-shared/

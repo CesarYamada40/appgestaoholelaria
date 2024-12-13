@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4">Bem-vindo ao Sistema de Reservas</h1>
+        <p class="lead">Faça sua reserva de forma rápida e fácil</p>
+        <a href="{{ url_for('nova_reserva') }}" class="btn btn-primary btn-lg">Fazer Reserva</a>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Nossos Serviços</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-calendar-plus display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">Reservas Online</h5>
+                        <p class="card-text">Faça suas reservas de forma rápida e conveniente através do nosso sistema online.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-clock-history display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">Gerenciamento</h5>
+                        <p class="card-text">Gerencie suas reservas com facilidade, podendo modificar ou cancelar quando necessário.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-bell display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">Confirmações</h5>
+                        <p class="card-text">Receba confirmações por email e mantenha-se informado sobre suas reservas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

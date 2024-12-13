@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Lista de Reservas</h2>
+        <a href="{{ url_for('nova_reserva') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Nova Reserva
+        </a>
+    </div>
+
+    {% if reservas %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nome</th>
+                    <th>Data</th>
+                    <th>Pessoas</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                <tr>
+                    <td>{{ reserva.nome }}</td>
+                    <td>{{ reserva.data.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ reserva.pessoas }}</td>
+                    <td>{{ reserva.telefone }}</td>
+                    <td>{{ reserva.email }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_reserva', id=reserva.id) }}" class="btn btn-sm btn-warning">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{{ url_for('deletar_reserva', id=reserva.id) }}" class="btn btn-sm btn-danger" 
+                           onclick="return confirm('Tem certeza que deseja deletar esta reserva?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        Nenhuma reserva encontrada.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
