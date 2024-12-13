@@ -1,114 +1,101 @@
-import React, { useEffect, useState } from 'react';
-import { RefreshControl, ScrollView } from 'react-native';
-import { Box, Text, VStack, HStack, Heading, Progress, useColorModeValue } from 'native-base';
-import { useRooms } from '../../hooks/useApi';
-import { Room } from '../../types/api';
-import { logger } from '../../utils/logger';
-
-interface DashboardStats {
-  totalRooms: number;
-  occupiedRooms: number;
-  availableRooms: number;
-  maintenanceRooms: number;
-  occupancyRate: number;
-}
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { VStack, HStack, Text, Icon, Box, Heading } from 'native-base';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export const Dashboard: React.FC = () => {
-  const [refreshing, setRefreshing] = useState(false);
-  const [stats, setStats] = useState<DashboardStats>({
-    totalRooms: 0,
-    occupiedRooms: 0,
-    availableRooms: 0,
-    maintenanceRooms: 0,
-    occupancyRate: 0,
-  });
+  const navigation = useNavigation();
 
-  const { data: rooms, loading, execute: loadRooms } = useRooms();
-
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const textColor = useColorModeValue('gray.800', 'gray.100');
-
-  useEffect(() => {
-    calculateStats();
-  }, [rooms]);
-
-  const calculateStats = () => {
-    if (!rooms) return;
-
-    try {
-      const occupied = rooms.filter(room => room.status === 'OCCUPIED').length;
-      const available = rooms.filter(room => room.status === 'AVAILABLE').length;
-      const maintenance = rooms.filter(room => room.status === 'MAINTENANCE').length;
-      const total = rooms.length;
-
-      setStats({
-        totalRooms: total,
-        occupiedRooms: occupied,
-        availableRooms: available,
-        maintenanceRooms: maintenance,
-        occupancyRate: total > 0 ? (occupied / total) * 100 : 0,
-      });
-
-      logger.info('Estatísticas do dashboard atualizadas', { stats });
-    } catch (error) {
-      logger.error('Erro ao calcular estatísticas', { error });
-    }
-  };
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await loadRooms();
-    setRefreshing(false);
-  };
-
-  const StatCard = ({ title, value, color }: { title: string; value: number; color: string }) => (
-    <Box bg={bgColor} p={4} rounded="lg" shadow={2} width="48%">
-      <VStack>
-        <Text color="gray.500" fontSize="sm">{title}</Text>
-        <Heading size="lg" color={color}>{value}</Heading>
-      </VStack>
-    </Box>
-  );
+  const mainButtons = [
+    {
+      title: 'Check-In',
+      icon: 'log-in-outline',
+      onPress: () => navigation.navigate('CheckIn'),
+    },
+    {
+      title: 'Minhas\nReservas',
+      icon: 'calendar-outline',
+      onPress: () => navigation.navigate('Reservas'),
+    },
+    {
+      title: 'Explorar',
+      icon: 'compass-outline',
+      onPress: () => navigation.navigate('Explorar'),
+    },
+    {
+      title: 'Room\nService',
+      icon: 'restaurant-outline',
+      onPress: () => navigation.navigate('RoomService'),
+    },
+    {
+      title: 'Comprar',
+      icon: 'cart-outline',
+      onPress: () => navigation.navigate('Comprar'),
+    },
+  ];
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-      }
-    >
-      <VStack space={4} p={4}>
-        <Box bg={bgColor} p={4} rounded="lg" shadow={2}>
-          <Heading size="md" color={textColor} mb={4}>Taxa de Ocupação</Heading>
-          <Progress value={stats.occupancyRate} colorScheme="blue" />
-          <Text mt={2} color="gray.500">{stats.occupancyRate.toFixed(1)}%</Text>
-        </Box>
+    <View style={styles.container}>
+      <Box bg="#000" p={4} roundedBottom="3xl">
+        <VStack space={4}>
+          <HStack justifyContent="space-between" alignItems="center">
+            <VStack>
+              <Text color="white" fontSize="lg">Olá,</Text>
+              <Heading color="#DAA520" size="xl">André Guimarães Lira</Heading>
+            </VStack>
+            <Text color="#DAA520" fontSize="md">213.234 pontos</Text>
+          </HStack>
+        </VStack>
+      </Box>
 
-        <HStack space={4} justifyContent="space-between">
-          <StatCard
-            title="Quartos Ocupados"
-            value={stats.occupiedRooms}
-            color="orange.500"
-          />
-          <StatCard
-            title="Quartos Disponíveis"
-            value={stats.availableRooms}
-            color="green.500"
-          />
-        </HStack>
-
-        <HStack space={4} justifyContent="space-between">
-          <StatCard
-            title="Em Manutenção"
-            value={stats.maintenanceRooms}
-            color="red.500"
-          />
-          <StatCard
-            title="Total de Quartos"
-            value={stats.totalRooms}
-            color="blue.500"
-          />
+      <VStack space={6} p={6} mt={4}>
+        <HStack flexWrap="wrap" justifyContent="space-between">
+          {mainButtons.map((button, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.button}
+              onPress={button.onPress}
+            >
+              <VStack alignItems="center" space={2}>
+                <Box
+                  bg="#DAA520"
+                  p={3}
+                  rounded="full"
+                  shadow={3}
+                >
+                  <Icon
+                    as={Ionicons}
+                    name={button.icon}
+                    size={7}
+                    color="white"
+                  />
+                </Box>
+                <Text
+                  textAlign="center"
+                  fontSize="sm"
+                  fontWeight="medium"
+                  numberOfLines={2}
+                >
+                  {button.title}
+                </Text>
+              </VStack>
+            </TouchableOpacity>
+          ))}
         </HStack>
       </VStack>
-    </ScrollView>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  button: {
+    width: '30%',
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+});

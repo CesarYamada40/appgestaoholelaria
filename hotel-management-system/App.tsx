@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { NativeBaseProvider } from 'native-base';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { ThemeProvider } from './src/context/ThemeContext';
@@ -32,13 +32,14 @@ export default function App() {
   }, []);
 
   return (
-    <NativeBaseProvider>
-      <ThemeProvider>
-        <AppProvider>
-          <StatusBar style="auto" />
-          <AppNavigator />
-        </AppProvider>
-      </ThemeProvider>
-    </NativeBaseProvider>
+    <NavigationContainer>
+      <NativeBaseProvider>
+        <ThemeProvider>
+          <AppProvider>
+            <AppNavigator />
+          </AppProvider>
+        </ThemeProvider>
+      </NativeBaseProvider>
+    </NavigationContainer>
   );
 }

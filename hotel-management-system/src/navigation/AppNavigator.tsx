@@ -6,39 +6,88 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../hooks/useTheme';
 
 // Telas
-import { ReservationList } from '../screens/reservations/ReservationList';
-import { ReservationCreate } from '../screens/reservations/ReservationCreate';
-import { ReservationDetails } from '../screens/reservations/ReservationDetails';
-import { RoomList } from '../screens/rooms/RoomList';
-import { RoomDetails } from '../screens/rooms/RoomDetails';
-import { GuestList } from '../screens/guests/GuestList';
-import { GuestCreate } from '../screens/guests/GuestCreate';
-import { GuestDetails } from '../screens/guests/GuestDetails';
 import { Dashboard } from '../screens/dashboard/Dashboard';
+import { ReservationForm } from '../screens/reservations/ReservationForm';
+import { ReservationConfirmation } from '../screens/reservations/ReservationConfirmation';
+import { ReservationSuccess } from '../screens/reservations/ReservationSuccess';
+import { AccessCard } from '../screens/access/AccessCard';
+import { Profile } from '../screens/profile/Profile';
+import { CheckIn } from '../screens/checkin/CheckIn';
+import { ReservationList } from '../screens/reservations/ReservationList';
+import { Explore } from '../screens/explore/Explore';
+import { RoomService } from '../screens/roomservice/RoomService';
+import { Shop } from '../screens/shop/Shop';
+import { PaymentList } from '../screens/payments/PaymentList';
+import { AddCard } from '../screens/payments/AddCard';
+import { EditProfile } from '../screens/profile/EditProfile';
+import { Menu } from '../screens/menu/Menu';
+import { Settings } from '../screens/menu/Settings';
+import { Help } from '../screens/menu/Help';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const ReservationStack = () => (
+function TabNavigator() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Reservar') {
+            iconName = focused ? 'calendar' : 'calendar-outline';
+          } else if (route.name === 'Cartões') {
+            iconName = focused ? 'card' : 'card-outline';
+          } else if (route.name === 'Conta') {
+            iconName = focused ? 'person' : 'person-outline';
+          } else if (route.name === 'Menu') {
+            iconName = focused ? 'menu' : 'menu-outline';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#DAA520',
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: {
+          backgroundColor: '#000',
+          borderTopColor: 'rgba(255, 255, 255, 0.1)',
+        },
+        headerStyle: {
+          backgroundColor: '#000',
+        },
+        headerTintColor: '#fff',
+      })}
+    >
+      <Tab.Screen name="Home" component={Dashboard} />
+      <Tab.Screen name="Reservar" component={ReservationForm} />
+      <Tab.Screen name="Cartões" component={AccessCard} />
+      <Tab.Screen name="Conta" component={Profile} />
+      <Tab.Screen name="Menu" component={Dashboard} />
+    </Tab.Navigator>
+  );
+}
+
+const PaymentStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="ReservationList" component={ReservationList} options={{ title: 'Reservas' }} />
-    <Stack.Screen name="ReservationCreate" component={ReservationCreate} options={{ title: 'Nova Reserva' }} />
-    <Stack.Screen name="ReservationDetails" component={ReservationDetails} options={{ title: 'Detalhes da Reserva' }} />
+    <Stack.Screen name="PaymentList" component={PaymentList} options={{ title: 'Cartões' }} />
+    <Stack.Screen name="AddCard" component={AddCard} options={{ title: 'Adicionar Cartão' }} />
   </Stack.Navigator>
 );
 
-const RoomStack = () => (
+const ProfileStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="RoomList" component={RoomList} options={{ title: 'Quartos' }} />
-    <Stack.Screen name="RoomDetails" component={RoomDetails} options={{ title: 'Detalhes do Quarto' }} />
+    <Stack.Screen name="ProfileMain" component={Profile} options={{ title: 'Minha Conta' }} />
+    <Stack.Screen name="EditProfile" component={EditProfile} options={{ title: 'Editar Perfil' }} />
   </Stack.Navigator>
 );
 
-const GuestStack = () => (
+const MenuStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="GuestList" component={GuestList} options={{ title: 'Hóspedes' }} />
-    <Stack.Screen name="GuestCreate" component={GuestCreate} options={{ title: 'Novo Hóspede' }} />
-    <Stack.Screen name="GuestDetails" component={GuestDetails} options={{ title: 'Detalhes do Hóspede' }} />
+    <Stack.Screen name="MenuMain" component={Menu} options={{ title: 'Menu' }} />
+    <Stack.Screen name="Settings" component={Settings} options={{ title: 'Configurações' }} />
+    <Stack.Screen name="Help" component={Help} options={{ title: 'Ajuda' }} />
   </Stack.Navigator>
 );
 
@@ -47,37 +96,69 @@ export const AppNavigator = () => {
 
   return (
     <NavigationContainer theme={theme}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            switch (route.name) {
-              case 'Dashboard':
-                iconName = focused ? 'home' : 'home-outline';
-                break;
-              case 'Reservas':
-                iconName = focused ? 'calendar' : 'calendar-outline';
-                break;
-              case 'Quartos':
-                iconName = focused ? 'bed' : 'bed-outline';
-                break;
-              case 'Hóspedes':
-                iconName = focused ? 'people' : 'people-outline';
-                break;
-              default:
-                iconName = 'help-outline';
-            }
-
-            return <Ionicons name={iconName} size={size} color={color} />;
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#000',
           },
-        })}
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
       >
-        <Tab.Screen name="Dashboard" component={Dashboard} />
-        <Tab.Screen name="Reservas" component={ReservationStack} />
-        <Tab.Screen name="Quartos" component={RoomStack} />
-        <Tab.Screen name="Hóspedes" component={GuestStack} />
-      </Tab.Navigator>
+        <Stack.Screen 
+          name="MainTab" 
+          component={TabNavigator} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="ReservationForm" 
+          component={ReservationForm}
+          options={{ title: 'Fazer Reserva' }}
+        />
+        <Stack.Screen 
+          name="ReservationConfirmation" 
+          component={ReservationConfirmation}
+          options={{ title: 'Confirmar Reserva' }}
+        />
+        <Stack.Screen 
+          name="ReservationSuccess" 
+          component={ReservationSuccess}
+          options={{ title: 'Reserva Confirmada' }}
+        />
+        <Stack.Screen 
+          name="AccessCard" 
+          component={AccessCard}
+          options={{ title: 'Cartão de Acesso' }}
+        />
+        <Stack.Screen name="CheckIn" component={CheckIn} options={{ title: 'Check-In' }} />
+        <Stack.Screen name="Reservas" component={ReservationList} options={{ title: 'Minhas Reservas' }} />
+        <Stack.Screen name="Explorar" component={Explore} options={{ title: 'Explorar' }} />
+        <Stack.Screen name="RoomService" component={RoomService} options={{ title: 'Room Service' }} />
+        <Stack.Screen name="Comprar" component={Shop} options={{ title: 'Pacotes Especiais' }} />
+        <Stack.Screen 
+          name="PaymentStack" 
+          component={PaymentStack}
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen 
+          name="ProfileStack" 
+          component={ProfileStack}
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen 
+          name="MenuStack" 
+          component={MenuStack}
+          options={{
+            headerShown: false
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
